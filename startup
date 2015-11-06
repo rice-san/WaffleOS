@@ -1,0 +1,4 @@
+--startup.lua
+
+term.setForegroundColor(colors.black)
+term.setBackgroundColor(colors.white)
