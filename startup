@@ -1,4 +1,13 @@
 --startup.lua
 
-term.setForegroundColor(colors.black)
+term.setTextColor(colors.black)
 term.setBackgroundColor(colors.white)
+
+_G.WaffleOS = {}
+
+shell.run("/System/API/LoadAPI.lua")
+
+WaffleOS.LoadAPI("/System/API/Math.lua")
+WaffleOS.LoadAPI("/System/API/Draw.lua")
+
+Draw.FillRect(1, 1, Draw.Display.width, Draw.Display.height, colors.white)
