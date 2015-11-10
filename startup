@@ -1,21 +1,39 @@
 
 --startup.lua
 
+os.pullEvent = os.pullEventRaw
+
 term.setTextColor(colors.black)
 term.setBackgroundColor(colors.white)
 
 _G.WaffleOS = {}
 
+_G.colors = colors
+_G.print = print
+_G.shell = shell
+_G.term = term
+
+_G.text = "Test"
+
 shell.run("/System/Core/LoadAPI.lua")
+WaffleOS.LoadAPI("/System/Core/Log.lua")
+
+_G.SystemLog = Log:StartLog("System")
+
 WaffleOS.LoadAPI("/System/Core/SFile.lua")
 
-SFile.UpdateFileHash("/startup")
-SFile.UpdateFileHash("/System/Core/Draw.lua")
+SystemLog:Close()
+
+SFile:UpdateFileHash("/startup")
+SFile:UpdateFileHash("/System/Core/Draw.lua")
+SFile:UpdateFileHash("/System/WaffleOS.lua")
 
 WaffleOS.LoadAPI("/System/Core/Math.lua")
 WaffleOS.LoadAPI("/System/Core/Draw.lua")
 
 
-Draw.FillRect(1, 1, Draw.Display.width, Draw.Display.height, colors.white)
+Draw:FillRect(1, 1, Draw.Display.width, Draw.Display.height, colors.white)
 
+--shell.run("/System/WaffleOS.lua")
+SFile:RunFileSecure("/System/WaffleOS.lua")
 

@@ -1,4 +1,4 @@
---/System/Core/SFile/Lua
+--/System/Core/SFile.lua
 
 --Some basic functions taken from another place
 
@@ -26,12 +26,12 @@ local function hash(str)
     return string.sub(p, 1, p:len() - 1)
 end
 
-UpdateFileHash = function(_path)
-    local path = _path
-    local hashpath = fs.combine("/System/Data/FileHashes/", path)
-    local hashdir = fs.combine("/System/Data/FileHashes/", fs.getDir(path))
+UpdateFileHash = function(self, __path)
+    local _path = __path
+    local hashpath = fs.combine("/System/Data/FileHashes/", _path..".hash")
+    local hashdir = fs.combine("/System/Data/FileHashes/", fs.getDir(_path..".hash"))
     
-    local file = fs.open(path, "r")
+    local file = fs.open(_path, "r")
     fs.makeDir(hashdir)
     local hashfile = fs.open(hashpath, "w")
     
@@ -44,25 +44,25 @@ UpdateFileHash = function(_path)
     end
 end
 
-CheckFileHash = function(_path)
-    local path = _path
-    local hashpath = fs.combine("/System/Data/FileHashes/", path)
+CheckFileHash = function(self, __path)
+    local _path = __path
+    local hashpath = fs.combine("/System/Data/FileHashes/", _path..".hash")
     
-    local file = fs.open(path, "r")
+    local file = fs.open(_path, "r")
     local hashfile = fs.open(hashpath, "r")
     
     if file and hashfile then
     	local text = file.readAll()
     	local hashtext = hashfile.readLine()
-    	print("Text when hashed: "..hash(text))
-    	print("Text in hashfile: "..hashtext)
+    	SystemLog("Text when hashed: "..hash(text))
+    	SystemLog("Text in hashfile: "..hashtext)
         if hash(text) == hashtext then
-        	print("They are the same")
+        	SystemLog("They are the same")
             file.close()
             hashfile.close()
             return true
         else
-        	print("They are different")
+        	SystemLog("They are different")
             file.close()
             hashfile.close()
             return false
@@ -70,14 +70,14 @@ CheckFileHash = function(_path)
     end
 end
 
-OpenFileSecure = function(path, mode)
-    if CheckFileHash(path) then
-        return fs.open(path, mode)
+OpenFileSecure = function(self, _path, mode)
+    if self:CheckFileHash(_path) then
+        return fs.open(_path, mode)
     end
 end
 
-RunFileSecure = function(path)
-    if CheckFileHash(path) then
-        return shell.run(path)
+RunFileSecure = function(self, _path)
+    if self:CheckFileHash(_path) then
+        return _G["shell"].run(_path)
     end
 end
