@@ -6,15 +6,16 @@ os.pullEvent = os.pullEventRaw
 term.setTextColor(colors.black)
 term.setBackgroundColor(colors.white)
 
-_G.WaffleOS = {}
+WaffleOS = {}
 
+--[[
 _G.colors = colors
 _G.print = print
 _G.shell = shell
 _G.term = term
 
 _G.text = "Test"
-
+]]
 shell.run("/System/Core/LoadAPI.lua")
 WaffleOS.LoadAPI("/System/Core/Log.lua")
 
@@ -36,4 +37,3 @@ Draw:FillRect(1, 1, Draw.Display.width, Draw.Display.height, colors.white)
 
 --shell.run("/System/WaffleOS.lua")
 SFile:RunFileSecure("/System/WaffleOS.lua")
-

@@ -11,7 +11,7 @@
 local function hash(str)
     local s = 0
     local p = ""
-    
+
     for c in str:gmatch(".") do
         s = s + string.byte(c)
     end
@@ -22,7 +22,7 @@ local function hash(str)
         p = p .. string.char(s % 94 + 33)
         s = bit.brshift(s, 1)
     end
-    
+
     return string.sub(p, 1, p:len() - 1)
 end
 
@@ -30,11 +30,11 @@ UpdateFileHash = function(self, __path)
     local _path = __path
     local hashpath = fs.combine("/System/Data/FileHashes/", _path..".hash")
     local hashdir = fs.combine("/System/Data/FileHashes/", fs.getDir(_path..".hash"))
-    
+
     local file = fs.open(_path, "r")
     fs.makeDir(hashdir)
     local hashfile = fs.open(hashpath, "w")
-    
+
     if file and hashfile then
         local text = file.readAll()
         local hashedText = hash(text)
@@ -47,22 +47,22 @@ end
 CheckFileHash = function(self, __path)
     local _path = __path
     local hashpath = fs.combine("/System/Data/FileHashes/", _path..".hash")
-    
+
     local file = fs.open(_path, "r")
     local hashfile = fs.open(hashpath, "r")
-    
+
     if file and hashfile then
     	local text = file.readAll()
     	local hashtext = hashfile.readLine()
-    	SystemLog("Text when hashed: "..hash(text))
-    	SystemLog("Text in hashfile: "..hashtext)
+    	--SystemLog("Text when hashed: "..hash(text))
+    	--SystemLog("Text in hashfile: "..hashtext)
         if hash(text) == hashtext then
-        	SystemLog("They are the same")
+        	--SystemLog("They are the same")
             file.close()
             hashfile.close()
             return true
         else
-        	SystemLog("They are different")
+        	--SystemLog("They are different")
             file.close()
             hashfile.close()
             return false
@@ -78,6 +78,6 @@ end
 
 RunFileSecure = function(self, _path)
     if self:CheckFileHash(_path) then
-        return _G["shell"].run(_path)
+        return os.run({},_path)
     end
 end
